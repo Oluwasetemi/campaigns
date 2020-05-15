@@ -24,3 +24,7 @@ function handleCheck(e) {
 checkboxesArray.forEach(checkbox => {
   checkbox.addEventListener('input', handleCheck);
 });
+
+// things left to handle - restore the state of data after unchecked
+// handle keyboard event
+// handleCheck input for multiple
