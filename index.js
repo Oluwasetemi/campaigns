@@ -13,6 +13,7 @@ function handleCheck(e) {
   if (e.currentTarget.id && !state.includes(e.currentTarget.id)) {
     state.push(e.currentTarget.id);
   }
+
   cards.forEach(card => {
     // just for one case
     const content = card.querySelector('p').textContent.toLowerCase();
@@ -34,15 +35,70 @@ function handleCheck(e) {
         card.style.display = 'none';
       }
       // remove the unchecked from the store
-      state = state.filter(eachState => eachState === e.currentTarget.id);
+      state = state.filter(eachState => eachState !== e.currentTarget.id);
     }
   });
 }
 
+function handleKeyPress(e) {
+  // handle keyboard event on input checkbox
+
+  if (e.key === 'Enter') {
+    console.log(e.target);
+    if (!e.target.checked) {
+      e.target.checked = true;
+      // add to state if it does not exist
+      if (e.currentTarget.id && !state.includes(e.currentTarget.id)) {
+        state.push(e.currentTarget.id);
+      }
+      // hide others apart from the checked one
+      cards.forEach(card => {
+        const content = card.querySelector('p').textContent.toLowerCase();
+
+        if (e.currentTarget.id !== content) {
+          card.style.display = 'none';
+        }
+
+        // check each card and restored the state
+        state.forEach(eachState => {
+          if (eachState === content) {
+            card.style.display = 'block';
+          }
+        });
+      });
+    } else if (e.target.checked && e.key === 'Enter') {
+      // remove checked
+      e.target.checked = '';
+
+      // remove from state
+      if (e.currentTarget.id && state.includes(e.currentTarget.id)) {
+        state = state.filter(eachState => eachState !== e.currentTarget.id);
+      }
+      // remove the card that match the unchecked input - TODO: not sure of how thing will behave
+      // i think it should
+      cards.forEach(card => {
+        const content = card.querySelector('p').textContent.toLowerCase();
+
+        if (e.currentTarget.id === content) {
+          card.style.display = 'none';
+        }
+      });
+    }
+  }
+}
+
+function restoreAllCheckBox(e) {
+  console.log(
+    'all checkbox should be restored to its default if none if checked'
+  );
+}
+
 checkboxesArray.forEach(checkbox => {
   checkbox.addEventListener('input', handleCheck);
+  checkbox.addEventListener('keypress', handleKeyPress);
 });
 
 // things left to handle - restore the state of data after unchecked ✅
 // handle keyboard event ✅
 // handleCheck input for multiple ✅
+// TODO: keyboard event
